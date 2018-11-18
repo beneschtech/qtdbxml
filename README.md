@@ -30,6 +30,6 @@ The SQL user is not the same as the XML config user.
 The initial data load or import is big, but the changes after are only deltas
 
 Easy building steps:
-/usr/lib64/qt5/bin/qmake qtdbxml.pro CONFIG-=debug CONFIG+=release
+qmake qtdbxml.pro CONFIG-=debug CONFIG+=release
 make
 make install

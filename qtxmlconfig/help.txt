@@ -1,0 +1,16 @@
+qtxmlconfig: Create configuration string for qtdbxml library
+
+Arguments:
+-h|--help: Show this help
+-v|--version: Show version
+-H|--host <hostname>: Specify the hostname of the database server (Default localhost)
+-d <dbname>: Database name *
+-u <username>: Database username *
+-p <password>: Database password
+-D <driver>: Database driver (Default PGSQL)
+
+Items marked with a * are required.
+
+Once argument validation passes, a test connection and test query will be made to the database specified.
+
+Assuming the database is accessible and a valid xml database, you will be given a key to set in your environment which will enable the library to connect easily
