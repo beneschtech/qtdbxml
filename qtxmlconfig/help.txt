@@ -4,10 +4,10 @@ Arguments:
 -h|--help: Show this help
 -v|--version: Show version
 -H|--host <hostname>: Specify the hostname of the database server (Default localhost)
--d <dbname>: Database name *
--u <username>: Database username *
--p <password>: Database password
--D <driver>: Database driver (Default PGSQL)
+-d|--dbname <dbname>: Database name *
+-u|--user <username>: Database username *
+-p|--pass <password>: Database password
+-D|--driver <driver>: Database driver (Default PGSQL)
 
 Items marked with a * are required.
 

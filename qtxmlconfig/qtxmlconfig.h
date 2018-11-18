@@ -17,7 +17,11 @@ public slots:
     void startup();
 
 private:
-    QTimer *myTimer;
+    bool parseArgs();
+    QString validateDriver(QString);
+    void usage();
+    bool validateDBSettings();
+
     QString dbDriver;
     QString dbUser;
     QString dbPasswd;
