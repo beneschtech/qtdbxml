@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 DISTFILES = README.md
 
 SUBDIRS += \
-    qtxmlconfig
+    qtxmlconfig \
+    lib/qtdbxml
