@@ -1,6 +1,8 @@
 #ifndef QTDBXML_H
 #define QTDBXML_H
 #include <QMutex>
+#include <QString>
+#include <QSqlDatabase>
 
 class QtDbXml
 {
@@ -10,12 +12,12 @@ public:
     static QtDbXml *instance();
 
 private:
-    Q_DISABLE_COPY
+    Q_DISABLE_COPY(QtDbXml)
     QtDbXml(QString driver,QString host,QString dbname,QString uname,QString passwd);
-    QString dbHost;
     QString dbDriver;
-    QString dbUname;
+    QString dbHost;
     QString dbName;
+    QString dbUname;
     QString dbPasswd;
 
     static QMutex constMutex;
