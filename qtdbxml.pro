@@ -5,4 +5,5 @@ DISTFILES = \
     sql/xmlconfig.sql
 
 SUBDIRS += \
-    qtxmlconfig
+    qtxmlconfig \
+    lib/qtdbxml
