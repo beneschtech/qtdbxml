@@ -1,6 +1,8 @@
 TEMPLATE = subdirs
 
-DISTFILES = README.md
+DISTFILES = \
+    README.md \
+    sql/xmlconfig.sql
 
 SUBDIRS += \
     qtxmlconfig
