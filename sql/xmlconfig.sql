@@ -103,7 +103,7 @@ CREATE TABLE public.xmlconfig_data (
     id integer NOT NULL,
     type integer NOT NULL,
     parent integer DEFAULT 0 NOT NULL,
-    next integer DEFAULT '-1'::integer NOT NULL,
+    "order" integer DEFAULT '-1'::integer NOT NULL,
     name character varying(64) NOT NULL,
     data character varying(64),
     revision integer NOT NULL,

@@ -6,4 +6,5 @@ DISTFILES = \
 
 SUBDIRS += \
     qtxmlconfig \
-    lib/qtdbxml
+    lib/qtdbxml \
+    test/connect

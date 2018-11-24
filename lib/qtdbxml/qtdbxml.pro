@@ -13,10 +13,13 @@ TEMPLATE = lib
 CONFIG += staticlib c++11
 
 SOURCES += \
-        qtdbxml.cpp
+        qtdbxml.cpp \
+    qtdbxmlnode.cpp \
+    qtdbxmldataitem.cpp
 
 HEADERS += \
-        qtdbxml.h
+        qtdbxml.h \
+    qtdbxmldataitem.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
