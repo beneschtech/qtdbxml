@@ -15,11 +15,13 @@ CONFIG += staticlib c++11
 SOURCES += \
         qtdbxml.cpp \
     qtdbxmlnode.cpp \
-    qtdbxmldataitem.cpp
+    qtdbxmldataitem.cpp \
+    dbdomdocument.cpp
 
 HEADERS += \
         qtdbxml.h \
-    qtdbxmldataitem.h
+    qtdbxmldataitem.h \
+    dbdomdocument.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

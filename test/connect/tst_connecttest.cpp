@@ -11,31 +11,36 @@ public:
     ConnectTest();
 
 private Q_SLOTS:
-    void environConnect();
-    void isConnected();
-    void getTestDOM();
+    void testConnection();
+    void testDOM();
+    void testRevision();
 };
 
 ConnectTest::ConnectTest()
 {
 }
 
-void ConnectTest::environConnect()
+void ConnectTest::testConnection()
 {
     QVERIFY(QtDbXml::init());
-}
-
-void ConnectTest::isConnected()
-{
     QVERIFY(QtDbXml::instance() != nullptr);
     QVERIFY(QtDbXml::instance()->isConnected());
 }
 
-void ConnectTest::getTestDOM()
+void ConnectTest::testDOM()
 {
-    QDomDocument d = QtDbXml::instance()->documentFromName("_test_xml",1);
-    QVERIFY(d.documentElement().isElement());
-    std::cout << "\n\nDocument string:\n" << d.toString().toStdString() << "\n\n" << std::endl;
+    DBDomDocument d = QtDbXml::instance()->documentFromName("_test_xml",0);
+    QVERIFY(!d.isNull());
+    std::cout << "\nDocument string:\n" << d.toString().toStdString() << std::endl;
+    std::cout << "Document revision: " << d.revision() << std::endl;
+}
+
+void ConnectTest::testRevision()
+{
+    QString curRev = QtDbXml::instance()->documentFromName("_test_xml",0).toString();
+    QString fRev = QtDbXml::instance()->documentFromName("_test_xml",1).toString();
+
+    QVERIFY(curRev != fRev);
 }
 QTEST_APPLESS_MAIN(ConnectTest)
 

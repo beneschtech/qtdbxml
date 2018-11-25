@@ -9,27 +9,27 @@
 #include "qtdbxml.h"
 #include "qtdbxmldataitem.h"
 
-QDomDocument QtDbXml::documentFromName(QString nm, unsigned revision)
+DBDomDocument QtDbXml::documentFromName(QString nm, unsigned revision)
 {
     QDomDocument rv;
 
     if (!isConnected())
-        return rv;
+        return DBDomDocument();
     QSqlQuery findDocument(connection());
     QString sql = QString("SELECT * FROM xmlconfig_data WHERE type = 0 AND parent = 0 AND \"order\" = 0 AND name = ?");
     if (!findDocument.prepare(sql))
     {
         std::cerr << findDocument.lastError().text().toStdString() << std::endl;
-        return rv;
+        return DBDomDocument();
     }
     findDocument.addBindValue(QVariant(nm));
     if (!findDocument.exec())
     {
         std::cerr << findDocument.lastError().text().toStdString() << std::endl;
-        return rv;
+        return DBDomDocument();
     }
     if (!findDocument.next())
-        return rv;
+        return DBDomDocument();
 
     QSqlQuery parentCur(connection());
     QSqlQuery idCur(connection());
@@ -38,29 +38,29 @@ QDomDocument QtDbXml::documentFromName(QString nm, unsigned revision)
     if (!parentCur.prepare(sql))
     {
         std::cerr << parentCur.lastError().text().toStdString() << std::endl;
-        return rv;
+        return DBDomDocument();
     }
     sql = "SELECT * FROM xmlconfig_data WHERE id = ?";
     if (!idCur.prepare(sql))
     {
         std::cerr << idCur.lastError().text().toStdString() << std::endl;
-        return rv;
+        return DBDomDocument();
     }
     sql = "SELECT xmldata_id AS id,data FROM xmlconfig_bigdata WHERE xmldata_id = ?";
     if (!bigCur.prepare(sql))
     {
         std::cerr << bigCur.lastError().text().toStdString() << std::endl;
-        return rv;
+        return DBDomDocument();
     }
-    documentRecursive(&rv,nullptr,&parentCur,&idCur,&bigCur,findDocument.value("id").toLongLong(),revision);
+    unsigned maxRev = 0;
+    documentRecursive(&rv,nullptr,&parentCur,&idCur,&bigCur,findDocument.value("id").toLongLong(),revision,&maxRev);
     findDocument.finish();
-    savedDocs[nm] = rv.documentElement().cloneNode().toElement();
-    return rv;
+    return DBDomDocument(rv,maxRev);
 }
 
-void QtDbXml::documentRecursive(QDomDocument *doc, QDomElement *el, QSqlQuery *parentCur, QSqlQuery *idCur, QSqlQuery *bigCur, long id, unsigned revision)
+void QtDbXml::documentRecursive(QDomDocument *doc, QDomElement *el, QSqlQuery *parentCur, QSqlQuery *idCur, QSqlQuery *bigCur, long long id, unsigned revision, unsigned *maxRev)
 {
-    parentCur->addBindValue(QVariant((long long)id));
+    parentCur->addBindValue(QVariant(id));
     parentCur->exec();
     QVector<long long> ids;
     while (parentCur->next())
@@ -71,11 +71,12 @@ void QtDbXml::documentRecursive(QDomDocument *doc, QDomElement *el, QSqlQuery *p
     foreach (long long elid,ids)
     {        
         QtDBXmlDataItem itm(idCur,bigCur,elid,revision);
+        if (itm.revision > *maxRev)
+            *maxRev = itm.revision;
         switch (itm.type)
         {
         case NONE:
             continue;
-            break;
 
         case ELEMENT:
         {
@@ -87,7 +88,7 @@ void QtDbXml::documentRecursive(QDomDocument *doc, QDomElement *el, QSqlQuery *p
                 doc->appendChild(e);
             }
             idCur->finish();
-            documentRecursive(doc,&e,parentCur,idCur,bigCur,itm.id,revision);
+            documentRecursive(doc,&e,parentCur,idCur,bigCur,itm.id,revision,maxRev);
             break;
         }
 

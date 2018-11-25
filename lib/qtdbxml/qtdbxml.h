@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QDomDocument>
 
+#include "dbdomdocument.h"
+
 #define QTDBXMLDBNAME "QTDBXML"
 
 class QtDbXml: public QObject
@@ -20,7 +22,7 @@ public:
     static QtDbXml *instance();
 
     bool isConnected() { return myIsConnected; }
-    QDomDocument documentFromName(QString,unsigned revId = 0);
+    DBDomDocument documentFromName(QString,unsigned revId = 0);
 
     enum DataType {
         NONE = -1,
@@ -37,7 +39,7 @@ private:
     QtDbXml(QString driver,QString host,QString dbname,QString uname,QString passwd);
     bool connect();
     QSqlDatabase connection();
-    void documentRecursive(QDomDocument *,QDomElement *,QSqlQuery *parentCur,QSqlQuery *idCur,QSqlQuery *bigCur,long id,unsigned revision);
+    void documentRecursive(QDomDocument *,QDomElement *,QSqlQuery *parentCur,QSqlQuery *idCur,QSqlQuery *bigCur,long long id,unsigned revision,unsigned *maxRev);
 
     bool myIsConnected;
     QSqlDatabase myDBHandle;
@@ -48,7 +50,6 @@ private:
     QString dbUname;
     QString dbPasswd;
     QMap<QThread *,QSqlDatabase> threadMap;
-    QMap<QString,QDomElement> savedDocs;
     static QMutex constMutex;
     static QtDbXml *myInstance;
 };
